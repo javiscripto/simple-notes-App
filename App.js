@@ -1,20 +1,25 @@
+import './gesture-handler'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { MainNavigation } from './navigation/mainNavigation';
+import * as SplashScreen from "expo-splash-screen";
+import { dropTables, init } from './DB';
+import { NavigationContainer } from '@react-navigation/native';
+import { FolderStack } from './navigation/stacks/FolderStack';
+
+// dropTables()
+//   .then(() => console.log('DB dropped'))
+init()
+  .then(() => console.log('DB initialized'))
+  .catch(err => console.error(err))
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <SafeAreaProvider>
+      <MainNavigation />
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
