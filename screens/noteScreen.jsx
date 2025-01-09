@@ -1,20 +1,36 @@
-import { useRoute } from "@react-navigation/native";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { deleteNote } from "../DB";
 
 
 export const NoteScreen = () => {
   const route = useRoute();
 
-  const { title, content, createdAt } = route.params;
+  const { title, content, id, createdAt } = route.params;
+  const { navigate } = useNavigation();
+
+  const handleDeletePress = async (id) => {
+    try {
+      await deleteNote(id)
+      Alert.alert("Nota eliminada")
+      navigate("Folder");
+    } catch (error) {
+      console.error("ha ocurrido un error al eliminar la nota: ", error)
+    }
+  }
+
+
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.options}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleDeletePress(id)}
+        >
           <Ionicons name="trash-sharp" size={24} color="black" />
         </TouchableOpacity>
         <TouchableOpacity>
