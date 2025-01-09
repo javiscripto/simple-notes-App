@@ -110,9 +110,9 @@ export const deleteNote = async (id) => {
 
 export const updateNote = async (id, title, content) => {
   try {
-    const result = await db.execAsync(
+    const result = await db.runAsync(
       `UPDATE notes SET title = ?, content = ? WHERE id = ?;`,
-      [title, content, id],
+      title, content, id
     );
     return result;
   } catch (error) {
