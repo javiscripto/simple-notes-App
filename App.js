@@ -2,10 +2,9 @@ import './gesture-handler'
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MainNavigation } from './navigation/mainNavigation';
-import * as SplashScreen from "expo-splash-screen";
 import { dropTables, init } from './DB';
-import { NavigationContainer } from '@react-navigation/native';
-import { FolderStack } from './navigation/stacks/FolderStack';
+import { Provider } from 'react-redux';
+import { store } from './store/index';
 
 // dropTables()
 //   .then(() => console.log('DB dropped'))
@@ -15,10 +14,12 @@ init()
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <MainNavigation />
-      <StatusBar style="auto" />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <MainNavigation />
+        <StatusBar style="auto" />
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 
