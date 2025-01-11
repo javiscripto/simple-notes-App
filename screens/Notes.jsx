@@ -12,7 +12,6 @@ export default function Notes() {
 
   const { navigate } = useNavigation()
   const route = useRoute()
-  console.log(route.params)
   const folderId = route.params.id;
   const folderName = route.params.name;
 
@@ -28,10 +27,9 @@ export default function Notes() {
       } else {
         result = await getFolderNotes(folderId);
       }
-      console.log("notas: ", result)
       setNotas(result)
     } catch (error) {
-      console.log("ha ocurrido un error al recibir las notas: ", error)
+      console.error("ha ocurrido un error al recibir las notas: ", error)
     }
   }
   useEffect(() => {
