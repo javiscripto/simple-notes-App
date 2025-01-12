@@ -5,6 +5,10 @@ let db = null;
 
 export const init = async () => {
   db = await SQLite.openDatabaseAsync("notes.db");
+  //activar las claves foraneas
+  await db.execAsync(`PRAGMA foreign_keys = ON;`);
+
+
   await db.execAsync(
     `CREATE TABLE IF NOT EXISTS folders (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -21,7 +25,7 @@ export const init = async () => {
     content TEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     folder_id INTEGER,
-    FOREIGN KEY (folder_id) REFERENCES folders (id) ON DELETE CASCADE
+    FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE
   );`
   );
 }
