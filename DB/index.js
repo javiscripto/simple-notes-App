@@ -67,6 +67,14 @@ export const getFolderNotes = async (id) => {
     console.error(error);
   }
 };
+export const deleteFolder = async (id) => {
+  try {
+    const result = await db.runAsync(`DELETE FROM folders WHERE id = ?;`, id);
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 //crea una nota dentro de una carpeta especifica
 export const createNote = async (title, content, folder_id) => {
