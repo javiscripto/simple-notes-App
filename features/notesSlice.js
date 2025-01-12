@@ -3,7 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   getFolderNotes, createNote, deleteNote as deleteNoteFromDB, updateNote as updateNoteFromDB,
   getAllFolders,
-  getNotes
+  getNotes,
+  deleteFolder as deleteFolderFromDB
 } from '../DB';
 
 export const fetchAllNotes = createAsyncThunk(
@@ -25,6 +26,15 @@ export const fetchFolderNotes = createAsyncThunk(
 export const fetchFolders = createAsyncThunk(
   'folders/fetchFolders',
   async () => {
+    const folders = await getAllFolders();
+    return folders;
+  }
+)
+
+export const deleteFolderAsync = createAsyncThunk(
+  'folders/deleteFolder',
+  async (id) => {
+    await deleteFolderFromDB(id);
     const folders = await getAllFolders();
     return folders;
   }
@@ -64,12 +74,18 @@ const notesSlice = createSlice({
   initialState: {
     notes: [],
     folders: [],
+    filteredNotes: [], //para almacenar las notas filtradas por id de carpeta
+    selectedNote: null, //recibirá una nota en formato objeto
     status: 'idle',
     error: null,
   },
   reducers: {
+    //recibe el id de la carpeta y filtra las notas
     setFilterNotesByFolderId: (state, action) => {
-      state.notes = action.payload;
+      state.filteredNotes = state.notes.filter(note => note.folder_id === action.payload);
+    },
+    setSelectedNote: (state, action) => {
+      state.selectedNote = action.payload;
     },
 
   }, extraReducers: (builder) => {
@@ -102,6 +118,13 @@ const notesSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchFolders.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.folders = action.payload;
+      })
+      .addCase(deleteFolderAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteFolderAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.folders = action.payload;
       })
