@@ -41,23 +41,21 @@ export default function Notes() {
     <SafeAreaView style={style.container}>
       <Text style={style.title}>{folderName}</Text>
       <View style={style.content}>
-        {notas.length === 0 ? (
-          <Text>no existen notas en esta carpeta</Text>
-        ) :
-          (<FlatList
-            data={notas}
-            keyExtractor={(item) => item.title}
-            contentContainerStyle={style.noteContainer}
-            numColumns={2}
-            renderItem={({ item }) =>
-              <CardNote title={item.title}
-                content={item.content}
-                id={item.id}
-                createdAt={item.createdAt}
+        <FlatList
+          data={notas}
+          keyExtractor={(item) => item.title}
+          contentContainerStyle={style.noteContainer}
+          numColumns={2}
+          emptyComponent={<Text>no existen notas en esta carpeta</Text>}
+          renderItem={({ item }) =>
+            <CardNote title={item.title}
+              content={item.content}
+              id={item.id}
+              createdAt={item.createdAt}
 
-                folderId={item.folder_id}
-              />}
-          />)}
+              folderId={item.folder_id}
+            />}
+        />
       </View>
       <CustomButton onPress={() => navigate("CreateNote", { folderId })}>Crear una nueva nota</CustomButton>
 
