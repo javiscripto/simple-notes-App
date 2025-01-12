@@ -46,7 +46,7 @@ export default function Notes() {
           keyExtractor={(item) => item.title}
           contentContainerStyle={style.noteContainer}
           numColumns={2}
-          emptyComponent={<Text>no existen notas en esta carpeta</Text>}
+          ListEmptyComponent={<Text>no existen notas en esta carpeta</Text>}
           renderItem={({ item }) =>
             <CardNote title={item.title}
               content={item.content}
