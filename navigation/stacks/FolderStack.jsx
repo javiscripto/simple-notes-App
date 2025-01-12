@@ -4,6 +4,7 @@ import { CreateFolder } from '../../screens/createFolder';
 import Notes from '../../screens/Notes';
 import { CreateNote } from '../../screens/createNote';
 import { NoteScreen } from '../../screens/noteScreen';
+import { TestScreen } from '../../screens/TestScreen';
 
 
 
@@ -19,6 +20,7 @@ export const FolderStack = () => {
         presentation: "modal",
       }}
     >
+      <StackScreen name="Test" component={TestScreen} />
       <StackScreen name="Folder" component={Folder} />
       <StackScreen name="CreateFolder" component={CreateFolder} />
       <StackScreen name="Notes" component={Notes} />
