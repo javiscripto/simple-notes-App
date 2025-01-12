@@ -1,45 +1,69 @@
 import { useState, useCallback, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CustomButton } from "../components/customButton";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { getAllFolders } from "../DB/index";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteFolderAsync } from "../features/notesSlice";
 
 export default function Folder() {
+  const [optionVisible, setOptionsVisible] = useState(false);
   const { navigate } = useNavigation();
-  const [folders, setFolders] = useState([]);
+  const dispatch = useDispatch();
 
-  const getfolders = async () => {
-    try {
-      const result = await getAllFolders();
-      setFolders(result);
-      return;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getfolders();
-  }, []);
-
+  const folders = useSelector((state) => state.notes.folders);
 
   const handleFolderNotesPress = (id, name) => {
     navigate("Notes", { id, name })
   }
+  const handleViewOptionLongPress = () => {
+    setOptionsVisible(true)
+  };
 
+  const deleteFolder = (id) => {
+    dispatch(deleteFolderAsync(id));
+    setOptionsVisible(false)
+  }
+  const deleteFolderPress = (id, name) => {
+    deleteFolder(id);
+    // Alert.alert(
+    //   "Eliminar Carpeta",
+    //   `Estas seguro que quieres eliminar la carpeta "${name}"?`,
+    //   [
+    //     {
+    //       text: "Cancelar",
+    //       onPress: () => setOptionsVisible(false),
+    //       style: "cancel",
+    //     },
+    //     {
+    //       text: "Eliminar",
+    //       onPress: () => deleteFolder(id),
+    //     },
+    //   ]
+    // )
+  }
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={style.item} onPress={() => handleFolderNotesPress(item.id, item.name)}>
+    <TouchableOpacity style={style.item}
+      onLongPress={handleViewOptionLongPress}
+      onPress={() => handleFolderNotesPress(item.id, item.name)}>
       <Ionicons name="folder" size={80} color={"#f90000"} />
       <Text style={style.text}>{item.name}</Text>
+      {
+        optionVisible && (
+          <TouchableOpacity onPress={() => deleteFolderPress(item.id, item.name)}>
+            <Ionicons name="trash" size={24} color={"#f90000"} />
+          </TouchableOpacity>
+        )
+      }
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={style.container}>
-      <Text style={style.title}>Folders</Text>
+      <Text style={style.title}>Carpetas</Text>
       <View style={style.content}>
         {folders.length === 0 ? (<Text>lista de carpetas vacia</Text>) : (
           <FlatList
@@ -65,6 +89,7 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#e9e9ff",
   },
   content: {
     flex: 1,
@@ -81,17 +106,11 @@ const style = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 8, padding: 16,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 8, elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.9,
-    shadowRadius: 8,
   },
   text: {
     fontSize: 16,
     fontWeight: "600",
-    marginTop: 8, // Espaciado entre ícono y texto
+    marginTop: 8,
     textAlign: "center",
   },
 });
