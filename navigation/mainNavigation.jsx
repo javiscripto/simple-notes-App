@@ -1,8 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { Tabs } from "./tabs";
-import { FolderStack } from "./stacks/FolderStack";
-import { useDispatch, useSelector } from 'react-redux';
-import { selectNotes, fetchAllNotes, fetchFolders } from "../features/notesSlice";
+import { useDispatch } from 'react-redux';
+import { fetchAllNotes, fetchFolders } from "../features/notesSlice";
 import { useEffect } from "react";
 export const MainNavigation = () => {
 
@@ -16,8 +15,7 @@ export const MainNavigation = () => {
   return (
 
     <NavigationContainer>
-      <FolderStack />
-      {/* <Tabs /> */}
+      <Tabs />
     </NavigationContainer>
   )
 }
