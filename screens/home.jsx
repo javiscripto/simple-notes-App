@@ -21,9 +21,15 @@ export default function Folder() {
     }, [])
   )
   const folders = useSelector((state) => state.notes.folders);
+
+
+
   const handleFolderNotesPress = (id, name) => {
     navigate("Notes", { id, name })
   }
+
+
+
   const handleViewOptionLongPress = () => {
     setOptionsVisible(true)
   };

@@ -3,62 +3,53 @@ import { Text, StyleSheet, FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CardNote } from "../components/cardNote";
 import { useEffect, useState } from "react";
-import { getFolderNotes, getNotes } from "../DB";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { CustomButton } from "../components/customButton";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilterNotesByFolderId } from "../features/notesSlice";//to do : revisar reducer
 
 export default function Notes() {
   const [notas, setNotas] = useState([]);
 
-  const { navigate } = useNavigation()
-  const route = useRoute()
-  const folderId = route.params.id;
-  const folderName = route.params.name;
+  const { navigate } = useNavigation();
+  const dispatch = useDispatch();
+  const route = useRoute();
 
+  const allNotes = useSelector((state) => state.notes.notes);
+  const foldernotes = useSelector((state) => state.notes.filteredNotes);
 
-
-
-
-  const fetchNotes = async () => {
-    try {
-      let result;
-      if (!folderId) {
-        result = await getNotes();
-      } else {
-        result = await getFolderNotes(folderId);
-      }
-      setNotas(result)
-    } catch (error) {
-      console.error("ha ocurrido un error al recibir las notas: ", error)
-    }
-  }
   useEffect(() => {
-    fetchNotes();
-  }, []);
-
+    if (route.params) {
+      const folderId = route.params.id;
+      const filteredNotes = allNotes.filter((note) => note.folder_id === folderId);
+      setNotas(filteredNotes);
+    } else {
+      setNotas(allNotes);
+    }
+  }, [route.params, allNotes, dispatch]);
 
   return (
     <SafeAreaView style={style.container}>
-      <Text style={style.title}>{folderName}</Text>
+      {route.params ? (
+        <Text style={style.title}>{route.params.name}</Text>
+      ) : (
+        <Text style={style.title}>Todas las notas</Text>
+      )}
       <View style={style.content}>
         <FlatList
           data={notas}
           keyExtractor={(item) => item.title}
           contentContainerStyle={style.noteContainer}
           numColumns={2}
-          ListEmptyComponent={<Text>no existen notas en esta carpeta</Text>}
-          renderItem={({ item }) =>
-            <CardNote title={item.title}
-              content={item.content}
-              id={item.id}
-              createdAt={item.createdAt}
-
-              folderId={item.folder_id}
-            />}
+          ListEmptyComponent={<Text>No existen notas en esta carpeta</Text>}
+          renderItem={({ item }) => <CardNote {...item} />}
         />
       </View>
-      <CustomButton onPress={() => navigate("CreateNote", { folderId })}>Crear una nueva nota</CustomButton>
-
+      {route.params && (
+        <CustomButton onPress={() => navigate("CreateNote", { folderId: route.params.id })}>
+          Crear una nueva nota
+        </CustomButton>
+      )}
     </SafeAreaView>
   );
 }
