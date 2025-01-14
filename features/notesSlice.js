@@ -156,5 +156,5 @@ const notesSlice = createSlice({
 });
 
 export const selectNotes = (state) => state.notes.notes;
-
+export const { setFilterNotesByFolderId, setSelectedNote } = notesSlice.actions;
 export default notesSlice.reducer;
