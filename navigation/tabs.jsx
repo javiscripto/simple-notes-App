@@ -1,10 +1,8 @@
-import { CreateNote } from "../screens/createNote";
-import Folder from "../screens/home";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Notes from "../screens/Notes";
 import { enableScreens } from "react-native-screens";
 import { Ionicons } from "@expo/vector-icons";
 import { FolderStack } from "./stacks/FolderStack";
+import { AllNotesStack } from "./stacks/AllNotesStack";
 
 enableScreens();
 
@@ -34,9 +32,7 @@ export const Tabs = () => {
 
     >
       <Tab.Screen name="Folders" component={FolderStack} />
-
-      <Tab.Screen name="Notes" component={Notes} />
-      <Tab.Screen name="Create" component={CreateNote} />
+      <Tab.Screen name="Notes" component={AllNotesStack} />
     </Tab.Navigator >
   );
 };
