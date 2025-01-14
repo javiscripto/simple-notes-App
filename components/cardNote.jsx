@@ -11,7 +11,7 @@ export const CardNote = ({ title, content, id, createdAt }) => {
 
   const { navigate } = useNavigation();
   const route = useRoute();
-  const folderId = route.params.folderId;
+  // const folderId = route.params.id;
 
   const handleViewnotePress = () => {
     navigate('NoteScreen', { title, content, createdAt, id })
@@ -23,7 +23,7 @@ export const CardNote = ({ title, content, id, createdAt }) => {
     setOptionsVisible(false)
     await deleteNote(id);
     Alert.alert('Nota Eliminada');
-    navigate('Folder', { folderId })
+    // navigate('Folder', { folderId })
 
   }
 
